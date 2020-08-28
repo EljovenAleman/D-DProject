@@ -2,6 +2,15 @@
 {
     class Entity
     {
+        public int inteligence;
+        public int strenght;
+        public int dexerity;
+        public int stealth;
+        public int perception;
+
+        public int health;
+
+
         public Position position;
         public char entitysHead = 'O';
         public char[] visualRepresentation;

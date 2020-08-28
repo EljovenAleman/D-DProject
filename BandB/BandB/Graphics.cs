@@ -32,6 +32,19 @@ namespace BandB
             }
         }
 
+        public static void ClearMenu()
+        {
+            Console.SetCursorPosition(10, 24);
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");
+            Console.Write("                                                                        ");          
+        }
+
         public static void ClearScreen()
         {
             Console.Clear();
@@ -88,7 +101,7 @@ namespace BandB
         {
             foreach(Entity entity in entities)
             {
-                for(int f=0; f<entity.visualRepresentation.Length; f++)
+                for(int f=0; f<4; f++)
                 {
                     matrix[entity.visualRepresentationPosition[f,0], entity.visualRepresentationPosition[f,1]] = entity.visualRepresentation[f];
                 }
@@ -207,7 +220,20 @@ namespace BandB
 
         private static void GenerateStageThree()
         {
+            for(int f=10; f<79;f=f+10)
+            {
+                matrix[2, f] = '^';
+                matrix[3, f] = '^';
+                matrix[4, f] = '^';
+                matrix[5, f] = 'u';
+                matrix[6, f] = '|';
+                matrix[7, f] = '|';
+            }
 
+            for (int f = 0; f < 79; f++)
+            {
+                matrix[12, f] = '-';
+            }
         }
 
     }

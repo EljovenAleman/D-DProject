@@ -6,13 +6,7 @@ namespace BandB
 
     class Classes : Entity
     {
-        public int inteligence;
-        public int strenght;
-        public int dexerity;
-        public int stealth;
-        public int perception;
-
-        public int health;
+        
         public Classes(char[] _visualRepresentation) : base(_visualRepresentation)
         {
 
