@@ -32,6 +32,7 @@ namespace BandB
             }
         }
 
+        //arreglar esto con un for()
         public static void ClearMenu()
         {
             Console.SetCursorPosition(10, 24);
@@ -42,6 +43,10 @@ namespace BandB
             Console.Write("                                                                        ");
             Console.Write("                                                                        ");
             Console.Write("                                                                        ");
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
             Console.Write("                                                                        ");          
         }
 
@@ -91,10 +96,11 @@ namespace BandB
             {
                 GenerateStageTwo();
             }
-            else if (stageNumber == 3)
+            else if (stageNumber == 3 || stageNumber == 4)
             {
                 GenerateStageThree();
             }
+
         }
 
         private static void PositionateVisuals(List<Entity> entities)
@@ -235,6 +241,8 @@ namespace BandB
                 matrix[12, f] = '-';
             }
         }
+
+
 
     }
 }

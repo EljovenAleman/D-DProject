@@ -243,15 +243,15 @@ namespace BandB
             
 
         }
-
-
-        //Hay que resolver un problema que pasa cuando golpeas al "tercer enemigo"
+       
         static void StartFight(Entity player, List<EnemySkeleton> enemies)
         {
             int target = 0;
             int numberRolled = 0;
             int enemiesLeft = 3;
             int naturalRolled = 0;
+            bool stillFighting = true;
+            int enemiesKilled = 0;
 
             
             
@@ -262,7 +262,7 @@ namespace BandB
             Console.ReadKey();
             Graphics.ClearMenu();
 
-            while (enemiesLeft>0)
+            while (stillFighting)
             {
                 target = AskToSelectTargetToAttack(enemiesLeft, enemies);
                 Graphics.ClearMenu();
@@ -284,40 +284,67 @@ namespace BandB
                     Console.WriteLine("Rolled D20+" + player.strenght + "=" + numberRolled + "(" +naturalRolled+ ")");
                     if(SuccesfullHit(numberRolled))
                     {
-                        enemies[target].health =- numberRolled - 5;
+                        int damageDone = numberRolled - 5;
+                        enemies[target-1].health = enemies[target-1].health - damageDone;
+                        Console.WriteLine("Damage Done= " + damageDone);
+                        Console.WriteLine("Skeleton health: " + enemies[target-1].health);
+                        Console.ReadKey();
+                        Graphics.ClearMenu();
                     }
                     else
                     {
                         Console.WriteLine("You missed the hit!");
+                        Console.ReadKey();
+                        Graphics.ClearMenu();
                     }
                     
                 }
                 else if (selectedOption == 2)
                 {
                     numberRolled = RNG.RollD20() + player.dexerity;
+                    naturalRolled = numberRolled - player.dexerity;
+                    Console.WriteLine("Rolled D20+" + player.dexerity + "=" + numberRolled + "(" + naturalRolled + ")");
                     if (SuccesfullHit(numberRolled))
                     {
-                        enemies[target].health = -numberRolled - 5;
+                        int damageDone = numberRolled - 5;
+                        enemies[target-1].health = enemies[target-1].health - damageDone;
+                        Console.WriteLine("Damage Done= " + damageDone);
+                        Console.WriteLine("Skeleton health: " + enemies[target-1].health);
+                        Console.ReadKey();
+                        Graphics.ClearMenu();
                     }
                     else
                     {
                         Console.WriteLine("You missed the hit!");
+                        Console.ReadKey();
+                        Graphics.ClearMenu();
                     }
                 }
 
+                enemiesKilled = 0;
                 foreach (EnemySkeleton enemy in enemies)
-                {
+                {                    
                     if(enemy.health<1)
                     {                        
-                        enemy.entitysHead = 'X';                       
-                        
+                        enemy.entitysHead = 'X';
+                        enemiesKilled++;                                                
                     }
+                }
+
+                if (enemiesKilled == 3)
+                {
+                    stillFighting = false;
                 }
 
                 Graphics.DrawEntities(World.entities,3);
-            }    
+            }
+            Console.SetCursorPosition(10, 24);
+            Console.WriteLine("Your enemies are no more.");
+            Console.ReadKey();
+            Graphics.ClearMenu();
         }
 
+        //el enemiesLeft no hace nada porque no se eliminar Enemy de una lista sin que tire error
         static int AskToSelectTargetToAttack(int enemiesLeft, List<EnemySkeleton> enemies)
         {
             string menuDialogue = "Select a target to attack!";
