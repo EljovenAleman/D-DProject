@@ -49,6 +49,11 @@ namespace BandB
                 Console.SetCursorPosition(10,24);
                 Console.WriteLine("You are dead");
             }
+            else
+            {
+                Console.SetCursorPosition(10, 24);
+                Console.WriteLine("Congratulations! You won!!");
+            }
             Console.ReadKey();
         }
 

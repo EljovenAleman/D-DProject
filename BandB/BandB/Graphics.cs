@@ -48,6 +48,13 @@ namespace BandB
             Console.Write("                                                                        ");          
             Console.Write("                                                                        ");          
             Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
+            Console.Write("                                                                        ");          
         }
 
         public static void ClearScreen()

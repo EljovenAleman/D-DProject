@@ -12,10 +12,11 @@ namespace BandB
         static bool stillFighting = true;
         static int enemiesToKill = 3;
         static int selectedOption = 0;
-        public static int stageNumber = 3;
+        public static int stageNumber = 1;
         public static int enviromentalEvent = 0;
         public static bool gameOnCourse = true;
         public static bool gameWon = false;
+        public static bool healingPotionObtained = false;
 
         static public int CheckForEvent(Entity player)
         {
@@ -53,6 +54,11 @@ namespace BandB
             else if (stageNumber == 3 && player.position.x > 15)
             {
                 enviromentalEvent = 3;
+                return true;
+            }
+            else if(stageNumber == 4 && player.position.x> 40)
+            {
+                enviromentalEvent = 4;
                 return true;
             }
 
@@ -102,11 +108,22 @@ namespace BandB
             selectedOption = int.Parse(line);
             if (selectedOption == 1)
             {
-                Console.WriteLine("As you pull from the algae, something comes off");
-                Console.WriteLine();
-                Console.WriteLine("You have aquired a fire bomb");
-                Console.ReadKey();
-                Console.Clear();
+                if(healingPotionObtained==false)
+                {
+                    Console.WriteLine("As you pull from the algae, something comes off");
+                    Console.WriteLine();
+                    Console.WriteLine("You have adquired a healing potion!");
+                    healingPotionObtained = true;
+                    Console.ReadKey();
+                    Graphics.ClearMenu();
+                }
+                else
+                {
+                    Console.Write("You already checked this algae and found a healing potion");
+                    Console.ReadKey();
+                    Graphics.ClearMenu();
+                }
+                
 
             }
             else if (selectedOption == 2)
@@ -130,6 +147,10 @@ namespace BandB
             else if (enviromentalEvent == 3)
             {
                 ActivateEnviromentalEvent3(player);
+            }
+            else if (enviromentalEvent == 4)
+            {
+                ActivateEnviromentalEvent4(player);
             }
         }
 
@@ -194,6 +215,8 @@ namespace BandB
             {
                 Console.WriteLine("As you walk further into the cavern, you don't even notice the enormous hole on the ground");
                 Console.WriteLine("you fall into your death");
+                gameOnCourse = false;
+                gameWon = false;
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -251,6 +274,15 @@ namespace BandB
             
 
         }
+
+        static private void ActivateEnviromentalEvent4(Entity player)
+        {
+            gameOnCourse = false;
+            gameWon = true;
+        }
+
+
+
        
         static void StartFight(Entity player, List<EnemySkeleton> enemies)
         {                                    
@@ -275,9 +307,9 @@ namespace BandB
                     naturalRolled = numberRolled - player.strenght;
                     Console.WriteLine("Rolled D20+" + player.strenght + "=" + numberRolled + "(" +naturalRolled+ ")");
 
-                    if(SuccesfullHit(numberRolled))
+                    if(SuccesfullHit(numberRolled, selectedOption))
                     {
-                        SucessfullAtackPromp(enemies);
+                        SucessfullAtackPromp(enemies, selectedOption);
                     }
                     else
                     {
@@ -293,9 +325,9 @@ namespace BandB
                     naturalRolled = numberRolled - player.dexerity;
                     Console.WriteLine("Rolled D20+" + player.dexerity + "=" + numberRolled + "(" + naturalRolled + ")");
 
-                    if (SuccesfullHit(numberRolled))
+                    if (SuccesfullHit(numberRolled, selectedOption))
                     {
-                        SucessfullAtackPromp(enemies);
+                        SucessfullAtackPromp(enemies, selectedOption);
                     }
                     else
                     {
@@ -360,9 +392,17 @@ namespace BandB
             return selectedOption;
         }
 
-        static bool SuccesfullHit(int numberRolled)
+        static bool SuccesfullHit(int numberRolled, int selectedOption)
         {
-            if (numberRolled > 9)
+            if(selectedOption==1 && numberRolled >= 15)
+            {
+                return true;
+            }
+            else if(selectedOption == 2 && numberRolled >= 7)
+            {
+                return true;
+            }
+            else if(selectedOption == 3 && numberRolled >= 10)
             {
                 return true;
             }
@@ -381,9 +421,17 @@ namespace BandB
             Graphics.DrawMenu(optionsAvailable, menuDialogue);
         }
 
-        static void SucessfullAtackPromp(List<EnemySkeleton> enemies)
+        static void SucessfullAtackPromp(List<EnemySkeleton> enemies, int selectedOption)
         {
-            int damageDone = numberRolled - 5;
+            int damageDone = 0;
+            if(selectedOption==1)
+            {
+                damageDone = numberRolled;
+            }
+            else if(selectedOption == 2)
+            {
+                damageDone = numberRolled - 6;
+            }            
             enemies[target - 1].health = enemies[target - 1].health - damageDone;
             Console.WriteLine("Damage Done= " + damageDone);
             Console.WriteLine("Skeleton health: " + enemies[target - 1].health);
@@ -412,7 +460,7 @@ namespace BandB
             for(int f = 0; f<enemiesToKill; f++)
             {
                 numberRolled = RNG.RollD20();
-                if(SuccesfullHit(numberRolled))
+                if(SuccesfullHit(numberRolled, 3))
                 {
                     damageDone = numberRolled - 5;
                     enemyTotalDamage = enemyTotalDamage + damageDone;
@@ -438,9 +486,23 @@ namespace BandB
         {
             if(player.health<1)
             {
-                stillFighting = false;
-                gameOnCourse = false;
-                gameWon = false;
+                if(healingPotionObtained == true)
+                {
+                    Console.SetCursorPosition(0,27);
+                    Console.WriteLine("You use the healing potion");
+                    player.health = 30;
+                    healingPotionObtained = false;
+                    Console.WriteLine("Your health is: " + player.health);
+                    Console.ReadKey();
+                    Graphics.ClearMenu();
+                }
+                else
+                {
+                    stillFighting = false;
+                    gameOnCourse = false;
+                    gameWon = false;
+                }
+                
             }
         }
 
