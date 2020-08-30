@@ -14,7 +14,7 @@
             stealth = 8;
             perception = 6;
 
-            health = 25;
+            health = 10;
         }
 
     }

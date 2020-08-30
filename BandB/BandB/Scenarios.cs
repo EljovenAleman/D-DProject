@@ -5,9 +5,17 @@ namespace BandB
 {
     static class Scenarios
     {
+        static int target = 0;
+        static int numberRolled = 0;
+        static int enemiesLeft = 3;
+        static int naturalRolled = 0;
+        static bool stillFighting = true;
+        static int enemiesToKill = 3;
         static int selectedOption = 0;
         public static int stageNumber = 3;
         public static int enviromentalEvent = 0;
+        public static bool gameOnCourse = true;
+        public static bool gameWon = false;
 
         static public int CheckForEvent(Entity player)
         {
@@ -245,17 +253,7 @@ namespace BandB
         }
        
         static void StartFight(Entity player, List<EnemySkeleton> enemies)
-        {
-            int target = 0;
-            int numberRolled = 0;
-            int enemiesLeft = 3;
-            int naturalRolled = 0;
-            bool stillFighting = true;
-            int enemiesKilled = 0;
-
-            
-            
-
+        {                                    
             Console.SetCursorPosition(10, 24);
             Console.WriteLine("Two melee and 1 range Tutorial Skeletons appear in front of you.");
             Console.WriteLine("Get ready!");
@@ -267,13 +265,7 @@ namespace BandB
                 target = AskToSelectTargetToAttack(enemiesLeft, enemies);
                 Graphics.ClearMenu();
 
-                string menuDialogue = "Perform an Action";
-
-                string[] optionsAvailable = new string[3];
-                optionsAvailable[0] = "1 Strenght";
-                optionsAvailable[1] = "2 Dexerity";
-
-                Graphics.DrawMenu(optionsAvailable, menuDialogue);
+                AskToPerformAnAction();
 
                 string line = Console.ReadLine();
                 selectedOption = int.Parse(line);
@@ -282,14 +274,10 @@ namespace BandB
                     numberRolled = RNG.RollD20() + player.strenght;
                     naturalRolled = numberRolled - player.strenght;
                     Console.WriteLine("Rolled D20+" + player.strenght + "=" + numberRolled + "(" +naturalRolled+ ")");
+
                     if(SuccesfullHit(numberRolled))
                     {
-                        int damageDone = numberRolled - 5;
-                        enemies[target-1].health = enemies[target-1].health - damageDone;
-                        Console.WriteLine("Damage Done= " + damageDone);
-                        Console.WriteLine("Skeleton health: " + enemies[target-1].health);
-                        Console.ReadKey();
-                        Graphics.ClearMenu();
+                        SucessfullAtackPromp(enemies);
                     }
                     else
                     {
@@ -304,14 +292,10 @@ namespace BandB
                     numberRolled = RNG.RollD20() + player.dexerity;
                     naturalRolled = numberRolled - player.dexerity;
                     Console.WriteLine("Rolled D20+" + player.dexerity + "=" + numberRolled + "(" + naturalRolled + ")");
+
                     if (SuccesfullHit(numberRolled))
                     {
-                        int damageDone = numberRolled - 5;
-                        enemies[target-1].health = enemies[target-1].health - damageDone;
-                        Console.WriteLine("Damage Done= " + damageDone);
-                        Console.WriteLine("Skeleton health: " + enemies[target-1].health);
-                        Console.ReadKey();
-                        Graphics.ClearMenu();
+                        SucessfullAtackPromp(enemies);
                     }
                     else
                     {
@@ -321,27 +305,29 @@ namespace BandB
                     }
                 }
 
-                enemiesKilled = 0;
-                foreach (EnemySkeleton enemy in enemies)
-                {                    
-                    if(enemy.health<1)
-                    {                        
-                        enemy.entitysHead = 'X';
-                        enemiesKilled++;                                                
-                    }
-                }
+                enemiesToKill = 3;
+                CheckForDeadEnemies(enemies);               
 
-                if (enemiesKilled == 3)
+                if (enemiesToKill == 0)
                 {
                     stillFighting = false;
                 }
 
                 Graphics.DrawEntities(World.entities,3);
+
+                EnemyTurnToAttack(player, enemies);
+
+                CheckIfPlayerIsAlive(player);
+
             }
-            Console.SetCursorPosition(10, 24);
-            Console.WriteLine("Your enemies are no more.");
-            Console.ReadKey();
-            Graphics.ClearMenu();
+            if(gameOnCourse == true)
+            {
+                Console.SetCursorPosition(10, 24);
+                Console.WriteLine("Your enemies are no more.");
+                Console.ReadKey();
+                Graphics.ClearMenu();
+            }
+            
         }
 
         //el enemiesLeft no hace nada porque no se eliminar Enemy de una lista sin que tire error
@@ -382,6 +368,80 @@ namespace BandB
             }
 
             return false;
+        }
+
+        static void AskToPerformAnAction()
+        {
+            string menuDialogue = "Perform an Action";
+
+            string[] optionsAvailable = new string[3];
+            optionsAvailable[0] = "1 Strenght";
+            optionsAvailable[1] = "2 Dexerity";
+
+            Graphics.DrawMenu(optionsAvailable, menuDialogue);
+        }
+
+        static void SucessfullAtackPromp(List<EnemySkeleton> enemies)
+        {
+            int damageDone = numberRolled - 5;
+            enemies[target - 1].health = enemies[target - 1].health - damageDone;
+            Console.WriteLine("Damage Done= " + damageDone);
+            Console.WriteLine("Skeleton health: " + enemies[target - 1].health);
+            Console.ReadKey();
+            Graphics.ClearMenu();
+        }
+
+        static void CheckForDeadEnemies(List<EnemySkeleton> enemies)
+        {
+            foreach (EnemySkeleton enemy in enemies)
+            {
+                if (enemy.health < 1)
+                {
+                    enemy.entitysHead = 'X';
+                    enemiesToKill--;
+                }
+            }
+        }
+
+        static void EnemyTurnToAttack(Entity player, List<EnemySkeleton> enemies)
+        {
+            Console.SetCursorPosition(0, 26);
+            int enemyTotalDamage = 0;
+            numberRolled = 0;
+            int damageDone = 0;
+            for(int f = 0; f<enemiesToKill; f++)
+            {
+                numberRolled = RNG.RollD20();
+                if(SuccesfullHit(numberRolled))
+                {
+                    damageDone = numberRolled - 5;
+                    enemyTotalDamage = enemyTotalDamage + damageDone;
+
+                    Console.WriteLine("Enemy " + (f+1) + " damage dealt: " + damageDone);
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine("You dodge enemy " + (f+1) + "'s hit!");
+                    Console.ReadKey();
+                }                
+            }
+
+            player.health = player.health - enemyTotalDamage;
+            Console.WriteLine("Your health is: " + player.health);
+            Console.ReadKey();
+            Graphics.ClearMenu();
+
+        }
+
+        static void CheckIfPlayerIsAlive(Entity player)
+        {
+            if(player.health<1)
+            {
+                stillFighting = false;
+                gameOnCourse = false;
+                gameWon = false;
+            }
         }
 
     }

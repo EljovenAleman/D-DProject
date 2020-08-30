@@ -7,6 +7,7 @@ namespace BandB
     class Game
     {
         private int movePlayerToStage2 = 0;
+               
         
 
         public void Start()
@@ -19,7 +20,7 @@ namespace BandB
             Graphics.DrawEntities(World.entities, 1);
             Graphics.DrawLineSeparator();
 
-            while (true)
+            while (Scenarios.gameOnCourse)
             {                                        
                 if(Scenarios.stageNumber==2)
                 {
@@ -41,8 +42,13 @@ namespace BandB
                     Graphics.DrawLineSeparator();
                     
                 }                                
-            }            
+            }
 
+            if(Scenarios.gameWon==false)
+            {
+                Console.SetCursorPosition(10,24);
+                Console.WriteLine("You are dead");
+            }
             Console.ReadKey();
         }
 
