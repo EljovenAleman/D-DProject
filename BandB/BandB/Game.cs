@@ -7,8 +7,7 @@ namespace BandB
     class Game
     {
         private int movePlayerToStage2 = 0;
-               
-        
+                       
 
         public void Start()
         {
@@ -22,14 +21,7 @@ namespace BandB
 
             while (Scenarios.gameOnCourse)
             {                                        
-                if(Scenarios.stageNumber==2)
-                {
-                    movePlayerToStage2++;
-                    if (movePlayerToStage2 == 1)
-                    {
-                        player.Move(10, 10);
-                    }
-                }
+                
                 if(Scenarios.CheckForEnviromentalEvent(player))
                 {
                     Scenarios.ActivateEnviromentalEvent(player);
@@ -38,9 +30,16 @@ namespace BandB
                 if (Input.UserPressedGameKey())
                 {
                     player.ProcessInputAction(Input.GetInputAction(), player);
+                    if (Scenarios.stageNumber == 2)
+                    {
+                        movePlayerToStage2++;
+                        if (movePlayerToStage2 == 1)
+                        {
+                            player.Move(10, 10);
+                        }
+                    }
                     Graphics.DrawEntities(World.entities, Scenarios.stageNumber);
-                    Graphics.DrawLineSeparator();
-                    
+                    Graphics.DrawLineSeparator();                    
                 }                                
             }
 

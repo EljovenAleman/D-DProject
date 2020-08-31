@@ -154,6 +154,8 @@ namespace BandB
             }
         }
 
+        //--
+
         static private void ActivateEnviromentalEvent1(Entity player)
         {
             enviromentalEvent = 0;
@@ -172,20 +174,20 @@ namespace BandB
 
             if(selectedOption == 1)
             {
-                rollValue = RNG.RollD20();
+                rollValue = RNG.RollD20()+player.perception;
             }
-            if (selectedOption == 2)
+            else if (selectedOption == 2)
             {
-                rollValue = RNG.RollD20();
+                rollValue = RNG.RollD20()+player.strenght;
             }
-            if (selectedOption == 3)
+            else if (selectedOption == 3)
             {
-                rollValue = RNG.RollD20();
+                rollValue = RNG.RollD20()+player.dexerity;
             }
 
             if(selectedOption == 1)
             {
-                if(rollValue<6)
+                if(rollValue<7)
                 {
                     string rollQuality = "low";
                     EnviromentalEvent1Perception(rollQuality, rollValue);                                       
@@ -204,6 +206,49 @@ namespace BandB
 
                 }
             }
+            else if(selectedOption == 2)
+            {
+                if (rollValue < 7)
+                {
+                    string rollQuality = "low";
+                    EnviromentalEvent1Strength(rollQuality, rollValue);
+                }
+                else if (rollValue < 15)
+                {
+                    string rollQuality = "medium";
+                    EnviromentalEvent1Strength(rollQuality, rollValue);
+                    player.Move(player.position.x - 2, player.position.y);
+                }
+                else if (rollValue >= 15)
+                {
+                    string rollQuality = "high";
+                    EnviromentalEvent1Strength(rollQuality, rollValue);
+                    player.Move(player.position.x + 12, player.position.y);
+
+                }
+            }
+            else if (selectedOption == 3)
+            {
+                if (rollValue < 9)
+                {
+                    string rollQuality = "low";
+                    EnviromentalEvent1Dexerity(rollQuality, rollValue);
+                }
+                else if (rollValue < 15)
+                {
+                    string rollQuality = "medium";
+                    EnviromentalEvent1Dexerity(rollQuality, rollValue);
+                    player.Move(player.position.x - 2, player.position.y);
+                }
+                else if (rollValue >= 15)
+                {
+                    string rollQuality = "high";
+                    EnviromentalEvent1Dexerity(rollQuality, rollValue);
+                    player.Move(player.position.x + 12, player.position.y);
+
+                }
+            }
+
         }
 
         static private void EnviromentalEvent1Perception(string rollQuality, int rollValue)
@@ -228,12 +273,75 @@ namespace BandB
             }
             else if(rollQuality=="high")
             {
-                Console.WriteLine("You already knew there was a hole on the ground and jump towards it");
-                Console.WriteLine("doing a backflip in the air and gracefully landing on the other side");               
+                Console.WriteLine("You clearly see a big hole on the ground a mean it's really fucking obvious");
+                Console.WriteLine("you walk through the safe space on the left like a normal human being");               
                 Console.ReadKey();
                 Console.Clear();
             }
         }
+
+        static private void EnviromentalEvent1Strength(string rollQuality, int rollValue)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Rolled D20: " + rollValue);
+
+            if (rollQuality == "low")
+            {
+                Console.WriteLine("As you fall you your best to grab to the edge of the hole, but you are too weak");
+                Console.WriteLine("you fall into your death");
+                gameOnCourse = false;
+                gameWon = false;
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else if (rollQuality == "medium")
+            {
+                Console.WriteLine("You extend your arms and manage to grab on a hanging algae, lucky for you it is strong enough");
+                Console.WriteLine("You climb your way back to the surface");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else if (rollQuality == "high")
+            {
+                Console.WriteLine("As you fall you punch a hole in the wall because you are FUCKING STRONG");
+                Console.WriteLine("then climb your way up");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        static private void EnviromentalEvent1Dexerity(string rollQuality, int rollValue)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Rolled D20: " + rollValue);
+
+            if (rollQuality == "low")
+            {
+                Console.WriteLine("As you aproach to the big gap on the ground you try go for a jump and trip over a rock");
+                Console.WriteLine("you fall into your death");
+                gameOnCourse = false;
+                gameWon = false;
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else if (rollQuality == "medium")
+            {
+                Console.WriteLine("As you aproach to the big gap on the ground you go for a jump and make it just far enough");
+                Console.WriteLine("for you to grab on the ledge on the other side of the hole an climb your way up");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else if (rollQuality == "high")
+            {
+                Console.WriteLine("You stand on the edge of the hole facing backwards and jump");
+                Console.WriteLine("doing a backflip in the air and gracefully landing on the other side");
+                Console.WriteLine("you are awesome");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        //--
 
         static private void ActivateEnviromentalEvent2(Entity player)
         {
