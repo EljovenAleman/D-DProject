@@ -46,7 +46,7 @@ namespace BandB
     
 
         //Exploring control
-         private void GoRight()
+         public void GoRight()
          {
              Move(this.position.x + 1, this.position.y);
 
@@ -83,44 +83,44 @@ namespace BandB
 
          }
 
-         private void GoUp()
+         public void GoUp()
          {
-              Move(this.position.x, this.position.y - 1);
+            if(this.position.y>10)
+            {
+                Move(this.position.x, this.position.y - 1);
 
-              this.visualRepresentationPosition[0, 0] = this.position.y + 1;
-              //this.visualRepresentationPosition[0, 1] = this.position.x;
+                this.visualRepresentationPosition[0, 0] = this.position.y + 1;
+                //this.visualRepresentationPosition[0, 1] = this.position.x;
 
-              this.visualRepresentationPosition[1, 0] = this.position.y + 2;
-              //this.visualRepresentationPosition[1, 1] = this.position.x;
+                this.visualRepresentationPosition[1, 0] = this.position.y + 2;
+                //this.visualRepresentationPosition[1, 1] = this.position.x;
 
-              this.visualRepresentationPosition[2, 0] = this.position.y + 1;
-              //this.visualRepresentationPosition[2, 1] = this.position.x - 1;
+                this.visualRepresentationPosition[2, 0] = this.position.y + 1;
+                //this.visualRepresentationPosition[2, 1] = this.position.x - 1;
 
-              this.visualRepresentationPosition[3, 0] = this.position.y + 1;
-              //this.visualRepresentationPosition[3, 1] = this.position.x + 1;
-
-
-
+                this.visualRepresentationPosition[3, 0] = this.position.y + 1;
+                //this.visualRepresentationPosition[3, 1] = this.position.x + 1;
+            }
          }
 
          private void GoDown()
          {
-             Move(this.position.x, this.position.y + 1);
+            if(this.position.y<19)
+            {
+                Move(this.position.x, this.position.y + 1);
 
-             this.visualRepresentationPosition[0, 0] = this.position.y + 1;
-             //this.visualRepresentationPosition[0, 1] = this.position.x;
+                this.visualRepresentationPosition[0, 0] = this.position.y + 1;
+                //this.visualRepresentationPosition[0, 1] = this.position.x;
 
-             this.visualRepresentationPosition[1, 0] = this.position.y + 2;
-             //this.visualRepresentationPosition[1, 1] = this.position.x;
+                this.visualRepresentationPosition[1, 0] = this.position.y + 2;
+                //this.visualRepresentationPosition[1, 1] = this.position.x;
 
-             this.visualRepresentationPosition[2, 0] = this.position.y + 1;
-             //this.visualRepresentationPosition[2, 1] = this.position.x - 1;
+                this.visualRepresentationPosition[2, 0] = this.position.y + 1;
+                //this.visualRepresentationPosition[2, 1] = this.position.x - 1;
 
-             this.visualRepresentationPosition[3, 0] = this.position.y + 1;
-             //this.visualRepresentationPosition[3, 1] = this.position.x + 1;
-
-
-
+                this.visualRepresentationPosition[3, 0] = this.position.y + 1;
+                //this.visualRepresentationPosition[3, 1] = this.position.x + 1;
+            }            
          }
 
          private void Inspect(Entity player)

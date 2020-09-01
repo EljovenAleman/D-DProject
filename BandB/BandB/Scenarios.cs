@@ -17,6 +17,7 @@ namespace BandB
         public static bool gameOnCourse = true;
         public static bool gameWon = false;
         public static bool healingPotionObtained = false;
+        public static bool alreadyJumpedTheGap = false;
 
         static public int CheckForEvent(Entity player)
         {
@@ -81,7 +82,7 @@ namespace BandB
             if(selectedOption == 1)
             {
                 Console.Write("You enter the cavern");
-                stageNumber = 2;
+                stageNumber = 2;                
                 Console.ReadKey();
                 Console.Clear();
                 
@@ -159,97 +160,121 @@ namespace BandB
         static private void ActivateEnviromentalEvent1(Entity player)
         {
             enviromentalEvent = 0;
-            int rollValue = 0;
-            string menuDialogue = "You are about to fall on a very deep hole. You have to make a decision";
-            string[] options = new string[3];
+            if(alreadyJumpedTheGap)
+            {
+                ActivateEnviromentalEvent1Extra(player);
+            }
+            else
+            {
+                int rollValue = 0;
+                string menuDialogue = "You are about to fall on a very deep hole. You have to make a decision";
+                string[] options = new string[3];
 
-            options[0] = "1 Perception";
-            options[1] = "2 Strength";
-            options[2] = "3 Dexerity";
+                options[0] = "1 Perception";
+                options[1] = "2 Strength";
+                options[2] = "3 Dexerity";
+
+                Graphics.DrawMenu(options, menuDialogue);
+
+                string line = Console.ReadLine();
+                selectedOption = int.Parse(line);
+
+                if (selectedOption == 1)
+                {
+                    rollValue = RNG.RollD20() + player.perception;
+                }
+                else if (selectedOption == 2)
+                {
+                    rollValue = RNG.RollD20() + player.strenght;
+                }
+                else if (selectedOption == 3)
+                {
+                    rollValue = RNG.RollD20() + player.dexerity;
+                }
+
+                if (selectedOption == 1)
+                {
+                    if (rollValue < 7)
+                    {
+                        string rollQuality = "low";
+                        EnviromentalEvent1Perception(rollQuality, rollValue);
+                    }
+                    else if (rollValue < 15)
+                    {
+                        string rollQuality = "medium";
+                        EnviromentalEvent1Perception(rollQuality, rollValue);
+                        player.Move(player.position.x - 2, player.position.y);
+                    }
+                    else if (rollValue >= 15)
+                    {
+                        alreadyJumpedTheGap = true;
+                        string rollQuality = "high";
+                        EnviromentalEvent1Perception(rollQuality, rollValue);
+                        player.Move(player.position.x + 12, player.position.y);
+
+                    }
+                }
+                else if (selectedOption == 2)
+                {
+                    if (rollValue < 7)
+                    {
+                        string rollQuality = "low";
+                        EnviromentalEvent1Strength(rollQuality, rollValue);
+                    }
+                    else if (rollValue < 15)
+                    {
+                        string rollQuality = "medium";
+                        EnviromentalEvent1Strength(rollQuality, rollValue);
+                        player.Move(player.position.x - 2, player.position.y);
+                    }
+                    else if (rollValue >= 15)
+                    {
+                        alreadyJumpedTheGap = true;
+                        string rollQuality = "high";
+                        EnviromentalEvent1Strength(rollQuality, rollValue);
+                        player.Move(player.position.x + 12, player.position.y);
+
+                    }
+                }
+                else if (selectedOption == 3)
+                {
+                    if (rollValue < 9)
+                    {
+                        string rollQuality = "low";
+                        EnviromentalEvent1Dexerity(rollQuality, rollValue);
+                    }
+                    else if (rollValue < 15)
+                    {
+                        string rollQuality = "medium";
+                        EnviromentalEvent1Dexerity(rollQuality, rollValue);
+                        player.Move(player.position.x - 2, player.position.y);
+                    }
+                    else if (rollValue >= 15)
+                    {
+                        alreadyJumpedTheGap = true;
+                        string rollQuality = "high";
+                        EnviromentalEvent1Dexerity(rollQuality, rollValue);
+                        player.Move(player.position.x + 12, player.position.y);
+
+                    }
+                }
+            }
             
-            Graphics.DrawMenu(options, menuDialogue);
 
-            string line = Console.ReadLine();
-            selectedOption = int.Parse(line);
-
-            if(selectedOption == 1)
-            {
-                rollValue = RNG.RollD20()+player.perception;
-            }
-            else if (selectedOption == 2)
-            {
-                rollValue = RNG.RollD20()+player.strenght;
-            }
-            else if (selectedOption == 3)
-            {
-                rollValue = RNG.RollD20()+player.dexerity;
-            }
-
-            if(selectedOption == 1)
-            {
-                if(rollValue<7)
-                {
-                    string rollQuality = "low";
-                    EnviromentalEvent1Perception(rollQuality, rollValue);                                       
-                }
-                else if(rollValue<15)
-                {
-                    string rollQuality = "medium";
-                    EnviromentalEvent1Perception(rollQuality, rollValue);
-                    player.Move(player.position.x - 2, player.position.y);
-                }
-                else if(rollValue>=15)
-                {
-                    string rollQuality = "high";
-                    EnviromentalEvent1Perception(rollQuality, rollValue);
-                    player.Move(player.position.x + 12, player.position.y);
-
-                }
-            }
-            else if(selectedOption == 2)
-            {
-                if (rollValue < 7)
-                {
-                    string rollQuality = "low";
-                    EnviromentalEvent1Strength(rollQuality, rollValue);
-                }
-                else if (rollValue < 15)
-                {
-                    string rollQuality = "medium";
-                    EnviromentalEvent1Strength(rollQuality, rollValue);
-                    player.Move(player.position.x - 2, player.position.y);
-                }
-                else if (rollValue >= 15)
-                {
-                    string rollQuality = "high";
-                    EnviromentalEvent1Strength(rollQuality, rollValue);
-                    player.Move(player.position.x + 12, player.position.y);
-
-                }
-            }
-            else if (selectedOption == 3)
-            {
-                if (rollValue < 9)
-                {
-                    string rollQuality = "low";
-                    EnviromentalEvent1Dexerity(rollQuality, rollValue);
-                }
-                else if (rollValue < 15)
-                {
-                    string rollQuality = "medium";
-                    EnviromentalEvent1Dexerity(rollQuality, rollValue);
-                    player.Move(player.position.x - 2, player.position.y);
-                }
-                else if (rollValue >= 15)
-                {
-                    string rollQuality = "high";
-                    EnviromentalEvent1Dexerity(rollQuality, rollValue);
-                    player.Move(player.position.x + 12, player.position.y);
-
-                }
-            }
+            
 
         }
+
+        static private void ActivateEnviromentalEvent1Extra(Entity player)
+        {
+            player.Move(player.position.x + 5, player.position.y);
+            Console.SetCursorPosition(10, 24);
+            Console.WriteLine("It`s too risky to go through there again");            
+            Console.ReadKey();
+            Graphics.ClearMenu();
+        }
+
+            
 
         static private void EnviromentalEvent1Perception(string rollQuality, int rollValue)
         {
@@ -263,20 +288,20 @@ namespace BandB
                 gameOnCourse = false;
                 gameWon = false;
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
             else if(rollQuality=="medium")
             {
                 Console.WriteLine("You barely see hole with the corner of your eye and manage to trip backwards saving yourself");                
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
             else if(rollQuality=="high")
             {
                 Console.WriteLine("You clearly see a big hole on the ground a mean it's really fucking obvious");
                 Console.WriteLine("you walk through the safe space on the left like a normal human being");               
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
         }
 
@@ -292,21 +317,21 @@ namespace BandB
                 gameOnCourse = false;
                 gameWon = false;
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
             else if (rollQuality == "medium")
             {
                 Console.WriteLine("You extend your arms and manage to grab on a hanging algae, lucky for you it is strong enough");
                 Console.WriteLine("You climb your way back to the surface");
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
             else if (rollQuality == "high")
             {
                 Console.WriteLine("As you fall you punch a hole in the wall because you are FUCKING STRONG");
                 Console.WriteLine("then climb your way up");
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
         }
 
@@ -322,14 +347,14 @@ namespace BandB
                 gameOnCourse = false;
                 gameWon = false;
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
             else if (rollQuality == "medium")
             {
                 Console.WriteLine("As you aproach to the big gap on the ground you go for a jump and make it just far enough");
                 Console.WriteLine("for you to grab on the ledge on the other side of the hole an climb your way up");
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
             else if (rollQuality == "high")
             {
@@ -337,7 +362,7 @@ namespace BandB
                 Console.WriteLine("doing a backflip in the air and gracefully landing on the other side");
                 Console.WriteLine("you are awesome");
                 Console.ReadKey();
-                Console.Clear();
+                Graphics.ClearMenu();
             }
         }
 
@@ -345,7 +370,7 @@ namespace BandB
 
         static private void ActivateEnviromentalEvent2(Entity player)
         {
-            player.Move(10, 10);
+            player.Move(10, 18);
             stageNumber = 3;
         }
 
